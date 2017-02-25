@@ -15,6 +15,7 @@
 #define OUT_FILE "orig.txt"
 #endif
 #endif
+//
 
 #define DICT_FILE "./dictionary/words.txt"
 
@@ -49,12 +50,7 @@ int main(int argc, char *argv[])
 #ifdef OPT_HASH
     /* build the entry (hash version) */
     entry *pHead[TABLE_SIZE], *e[TABLE_SIZE];
-    for (int i=0; i<TABLE_SIZE; i++) {
-        pHead[i] = (entry *) malloc(sizeof(entry));
-        printf("size of entry : %lu bytes\n", sizeof(entry));
-        e[i] = pHead[i];
-        e[i]->pNext = NULL;
-    }
+    printf("size of entry : %lu bytes\n", sizeof(entry));
 
 #else
     /* build the entry */
@@ -65,10 +61,10 @@ int main(int argc, char *argv[])
     e->pNext = NULL;
 #endif
 
+
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
-
 
     clock_gettime(CLOCK_REALTIME, &start);
     while (fgets(line, sizeof(line), fp)) {
@@ -91,23 +87,31 @@ int main(int argc, char *argv[])
     /* close file as soon as possible */
     fclose(fp);
 
+
+
     /* the givn last name to find */
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
+
+#ifndef OPT_HASH
     e = pHead;
 
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
     assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+#endif
+
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
+
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
     findName(input, e);
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time2 = diff_in_second(start, end);
 
+    printf("%s\n",OUT_FILE);
     FILE *output = fopen(OUT_FILE, "a");
     fprintf(output, "append() findName() %lf %lf\n", cpu_time1, cpu_time2);
     fclose(output);
