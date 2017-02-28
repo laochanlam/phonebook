@@ -12,7 +12,7 @@ entry *findName(char lastName[], entry *e[])
     while (tmp) {
         if (strcasecmp(lastName, tmp->lastName) == 0)
             return e[hash_value];
-        tmp = e[hash_value]->pNext;
+        tmp = tmp->pNext;
     }
     return NULL;
 }
