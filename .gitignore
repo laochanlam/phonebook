@@ -8,9 +8,7 @@
 phonebook_opt
 phonebook_orig
 phonebook_opt_hash
+phonebook_opt_hash_pool
 calculate
-orig.txt
-opt.txt
-opt_hash.txt
-output.txt
+*.txt
 runtime.png

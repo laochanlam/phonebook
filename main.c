@@ -12,10 +12,13 @@
 #ifdef OPT_HASH
 #define OUT_FILE "opt_hash.txt"
 #else
+#ifdef OPT_HASH_POOL
+#define OUT_FILE "opt_hash_pool.txt"
+#else
 #define OUT_FILE "orig.txt"
 #endif
 #endif
-//
+#endif
 
 #define DICT_FILE "./dictionary/words.txt"
 
@@ -47,7 +50,12 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-#ifdef OPT_HASH
+#ifdef OPT_HASH_POOL
+    memory_pool_init();
+    printf("memory pool created!\n");
+#endif
+
+#if ( defined OPT_HASH ) || ( defined OPT_HASH_POOL )
     /* build the entry (hash version) */
     entry *pHead[TABLE_SIZE], *e[TABLE_SIZE];
     printf("size of entry : %lu bytes\n", sizeof(entry));
@@ -73,7 +81,7 @@ int main(int argc, char *argv[])
         line[i - 1] = '\0';
         i = 0;
 
-#ifdef OPT_HASH
+#if ( defined OPT_HASH ) || ( defined OPT_HASH_POOL )
         /* append() (hash version) */
         append(line, e);
 #else
@@ -87,14 +95,12 @@ int main(int argc, char *argv[])
     /* close file as soon as possible */
     fclose(fp);
 
-
-
     /* the givn last name to find */
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
 
-#ifndef OPT_HASH
-    e = pHead;
+#if ( !defined OPT_HASH ) && ( !defined OPT_HASH_POOL )
 
+    e = pHead;
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
     assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
