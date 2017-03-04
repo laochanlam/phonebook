@@ -8,3 +8,4 @@ set output 'runtime.png'
 plot [:][:0.150]'output.txt' using 2:xtic(1) with histogram title 'original', \
 '' using 3:xtic(1) with histogram title 'optimized - entry size reduced'  , \
 '' using 4:xtic(1) with histogram title 'optimized - hash function' , \
+'' using 5:xtic(1) with histogram title 'optimized - memory pool' 
